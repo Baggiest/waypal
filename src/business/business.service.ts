@@ -22,15 +22,15 @@ export class BusinessService {
     
     // This query will:
     // 1. Create a point from the search coordinates
-    // 2. Calculate distance using ST_Distance_Sphere
+    // 2. Calculate distance using ST_Distance
     // 3. Order results by distance
     return this.businessRepository
       .createQueryBuilder('business')
       .select('business.*')
       .addSelect(
-        `ST_Distance_Sphere(
-          business.location,
-          ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)
+        `ST_Distance(
+          business.location::geography,
+          ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography
         ) as distance`,
       )
       .setParameters({
